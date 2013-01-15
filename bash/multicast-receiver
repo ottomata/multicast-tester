@@ -1,0 +1,51 @@
+#!/bin/bash
+
+# include multicast.lib.sh
+script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $script_dir/multicast.lib.sh
+
+
+
+
+function usage {
+    cat <<EOF
+Usage:
+
+$progname [-g <multicast-group-ip>] [-p <port>] [-b <bind_ip>] [-h]
+
+EOF
+}
+
+while getopts "hg:p:b:" opt; do
+    case $opt in
+        g)
+            group_ip=$OPTARG
+            ;;
+        p)
+            port=$OPTARG
+            ;;
+        b)
+            bind_ip=$OPTARG
+            ;;
+        h)
+            usage
+            exit;
+            ;;
+        ?)
+            echo "Error, Invalid option: '${opt}'"
+            usage
+            exit 1;
+            ;;
+            
+    esac
+done
+
+# start the multicast listener
+echo "Starting $progname for multicast group $group_ip on port $port binding to $bind_ip, printing received packets to stdout."
+cmd="socat UDP4-RECVFROM:${port},ip-add-membership=${group_ip}:${bind_ip},fork FD:2"
+echo "${cmd}"
+$cmd
+
+
+ # socat UDP4-RECVFROM:14454,ip-add-membership=224.1.0.1:172.16.19.148,fork FD:2
+# socat STDIO UDP4-DATAGRAM:224.1.0.1:14454,range=10.0.1.0/27
