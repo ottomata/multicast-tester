@@ -10,7 +10,7 @@ import java.net.MulticastSocket;
 import java.util.Scanner; 
 
 /**
- * Hacky class to quickly run a java multicast listener printing received packets to stdout.
+ * Hacky class to quickly run a java multicast sender sending stdin lines to the multicast group
  */
 public class MulticastSender {
   public static void main(String args[]) {
